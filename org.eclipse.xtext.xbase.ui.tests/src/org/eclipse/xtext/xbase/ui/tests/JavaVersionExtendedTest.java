@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2018 itemis AG (http://www.itemis.eu) and others.
+ * Copyright (c) 2018, 2021 itemis AG (http://www.itemis.eu) and others.
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -45,6 +45,34 @@ public class JavaVersionExtendedTest {
 		try {
 			long value = ClassFileConstants.class.getField("JDK11").getLong(null);
 			assertEquals(value, JavaVersion.JAVA11.toJdtClassFileConstant());
+		} catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException | SecurityException e) {
+			System.err.println("ooops");
+			// ok
+		}
+		try {
+			long value = ClassFileConstants.class.getField("JDK12").getLong(null);
+			assertEquals(value, JavaVersion.JAVA12.toJdtClassFileConstant());
+		} catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException | SecurityException e) {
+			System.err.println("ooops");
+			// ok
+		}
+		try {
+			long value = ClassFileConstants.class.getField("JDK13").getLong(null);
+			assertEquals(value, JavaVersion.JAVA13.toJdtClassFileConstant());
+		} catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException | SecurityException e) {
+			System.err.println("ooops");
+			// ok
+		}
+		try {
+			long value = ClassFileConstants.class.getField("JDK14").getLong(null);
+			assertEquals(value, JavaVersion.JAVA14.toJdtClassFileConstant());
+		} catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException | SecurityException e) {
+			System.err.println("ooops");
+			// ok
+		}
+		try {
+			long value = ClassFileConstants.class.getField("JDK15").getLong(null);
+			assertEquals(value, JavaVersion.JAVA15.toJdtClassFileConstant());
 		} catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException | SecurityException e) {
 			System.err.println("ooops");
 			// ok
