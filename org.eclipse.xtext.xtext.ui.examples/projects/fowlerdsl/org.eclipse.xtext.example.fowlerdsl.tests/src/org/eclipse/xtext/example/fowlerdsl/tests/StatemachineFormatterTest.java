@@ -8,10 +8,12 @@
  */
 package org.eclipse.xtext.example.fowlerdsl.tests;
 
+import org.eclipse.xtext.formatting2.FormatterPreferenceKeys;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.XtextRunner;
 import org.eclipse.xtext.testing.formatter.FormatterTestHelper;
 import org.eclipse.xtext.testing.formatter.FormatterTestRequest;
+import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -26,292 +28,300 @@ public class StatemachineFormatterTest {
 	@Inject
 	private FormatterTestHelper formatterTestHelper;
 	
-	private static final String NL = System.lineSeparator();
+	public void assertFormatted(Procedure1<FormatterTestRequest> init) {
+		formatterTestHelper.assertFormatted(new Procedure1<FormatterTestRequest>() {
+			@Override
+			public void apply(FormatterTestRequest p) {
+				p.preferences(m -> m.put(FormatterPreferenceKeys.lineSeparator, "\n"));
+				init.apply(p);
+			}
+		});
+	}
 
 	@Test
 	public void events() {
-		formatterTestHelper.assertFormatted((FormatterTestRequest it) -> {
+		assertFormatted((FormatterTestRequest it) -> {
 			it.setToBeFormatted(
-					"events doorClosed D1CL drawerOpened D2OP lightOn L1ON doorOpened D1OP panelClosed PNCL end" + NL);
+					"events doorClosed D1CL drawerOpened D2OP lightOn L1ON doorOpened D1OP panelClosed PNCL end\n");
 			it.setExpectation(
-					"events" + NL +
-					"	doorClosed   D1CL" + NL +
-					"	drawerOpened D2OP" + NL +
-					"	lightOn      L1ON" + NL +
-					"	doorOpened   D1OP" + NL +
-					"	panelClosed  PNCL" + NL +
-					"end" + NL);
+					"events\n" +
+					"	doorClosed   D1CL\n" +
+					"	drawerOpened D2OP\n" +
+					"	lightOn      L1ON\n" +
+					"	doorOpened   D1OP\n" +
+					"	panelClosed  PNCL\n" +
+					"end\n");
 		});
 	}
 
 	@Test
 	public void commands() {
-		formatterTestHelper.assertFormatted((FormatterTestRequest it) -> {
-			it.setToBeFormatted("commands unlockPanel PNUL lockPanel NLK lockDoor D1LK unlockDoor D1UL end" + NL);
+		assertFormatted((FormatterTestRequest it) -> {
+			it.setToBeFormatted("commands unlockPanel PNUL lockPanel NLK lockDoor D1LK unlockDoor D1UL end\n");
 			it.setExpectation(
-					"commands" + NL +
-					"	unlockPanel PNUL" + NL +
-					"	lockPanel   NLK" + NL +
-					"	lockDoor    D1LK" + NL +
-					"	unlockDoor  D1UL" + NL +
-					"end" + NL);
+					"commands\n" +
+					"	unlockPanel PNUL\n" +
+					"	lockPanel   NLK\n" +
+					"	lockDoor    D1LK\n" +
+					"	unlockDoor  D1UL\n" +
+					"end\n");
 		});
 	}
 
 	@Test
 	public void states() {
-		formatterTestHelper.assertFormatted((FormatterTestRequest it) -> {
+		assertFormatted((FormatterTestRequest it) -> {
 			it.setToBeFormatted(
-					"state idle end state active end state waitingForLight end" + NL +
-					"state waitingForDrawer end state unlockedPanel end" + NL);
+					"state idle end state active end state waitingForLight end\n" +
+					"state waitingForDrawer end state unlockedPanel end\n");
 			it.setExpectation(
-					"state idle" + NL +
-					"end" + NL +
-					NL +
-					"state active" + NL +
-					"end" + NL +
-					NL +
-					"state waitingForLight" + NL +
-					"end" + NL +
-					NL +
-					"state waitingForDrawer" + NL +
-					"end" + NL +
-					NL +
-					"state unlockedPanel" + NL +
-					"end" + NL);
+					"state idle\n" +
+					"end\n" +
+					"\n" +
+					"state active\n" +
+					"end\n" +
+					"\n" +
+					"state waitingForLight\n" +
+					"end\n" +
+					"\n" +
+					"state waitingForDrawer\n" +
+					"end\n" +
+					"\n" +
+					"state unlockedPanel\n" +
+					"end\n");
 		});
 	}
 
 	@Test
 	public void resetEvent() {
-		formatterTestHelper.assertFormatted((FormatterTestRequest it) -> {
+		assertFormatted((FormatterTestRequest it) -> {
 			it.setToBeFormatted(
-					"events doorClosed D1CL drawerOpened D2OP lightOn L1ON doorOpened D1OP panelClosed PNCL end" + NL +
-					"resetEvents doorOpened end" + NL);
+					"events doorClosed D1CL drawerOpened D2OP lightOn L1ON doorOpened D1OP panelClosed PNCL end\n" +
+					"resetEvents doorOpened end\n");
 			it.setExpectation(
-					"events" + NL +
-					"	doorClosed   D1CL" + NL +
-					"	drawerOpened D2OP" + NL +
-					"	lightOn      L1ON" + NL +
-					"	doorOpened   D1OP" + NL +
-					"	panelClosed  PNCL" + NL +
-					"end" + NL +
-					NL +
-					"resetEvents" + NL +
-					"	doorOpened" + NL +
-					"end" + NL);
+					"events\n" +
+					"	doorClosed   D1CL\n" +
+					"	drawerOpened D2OP\n" +
+					"	lightOn      L1ON\n" +
+					"	doorOpened   D1OP\n" +
+					"	panelClosed  PNCL\n" +
+					"end\n" +
+					"\n" +
+					"resetEvents\n" +
+					"	doorOpened\n" +
+					"end\n");
 		});
 	}
 
 	@Test
 	public void resetEvents() {
-		formatterTestHelper.assertFormatted((FormatterTestRequest it) -> {
+		assertFormatted((FormatterTestRequest it) -> {
 			it.setToBeFormatted(
-					"events doorClosed D1CL drawerOpened D2OP lightOn L1ON doorOpened D1OP panelClosed PNCL end" + NL +
-					"resetEvents doorClosed doorOpened end" + NL);
+					"events doorClosed D1CL drawerOpened D2OP lightOn L1ON doorOpened D1OP panelClosed PNCL end\n" +
+					"resetEvents doorClosed doorOpened end\n");
 			it.setExpectation(
-					"events" + NL +
-					"	doorClosed   D1CL" + NL +
-					"	drawerOpened D2OP" + NL +
-					"	lightOn      L1ON" + NL +
-					"	doorOpened   D1OP" + NL +
-					"	panelClosed  PNCL" + NL +
-					"end" + NL +
-					NL +
-					"resetEvents" + NL +
-					"	doorClosed" + NL +
-					"	doorOpened" + NL +
-					"end" + NL);
+					"events\n" +
+					"	doorClosed   D1CL\n" +
+					"	drawerOpened D2OP\n" +
+					"	lightOn      L1ON\n" +
+					"	doorOpened   D1OP\n" +
+					"	panelClosed  PNCL\n" +
+					"end\n" +
+					"\n" +
+					"resetEvents\n" +
+					"	doorClosed\n" +
+					"	doorOpened\n" +
+					"end\n");
 		});
 	}
 
 	@Test
 	public void events_commands() {
-		formatterTestHelper.assertFormatted((FormatterTestRequest it) -> {
+		assertFormatted((FormatterTestRequest it) -> {
 			it.setToBeFormatted(
-					"events doorClosed D1CL drawerOpened D2OP lightOn L1ON doorOpened D1OP panelClosed PNCL end" + NL +
-					"commands unlockPanel PNUL lockPanel NLK lockDoor D1LK unlockDoor D1UL end" + NL);
+					"events doorClosed D1CL drawerOpened D2OP lightOn L1ON doorOpened D1OP panelClosed PNCL end\n" +
+					"commands unlockPanel PNUL lockPanel NLK lockDoor D1LK unlockDoor D1UL end\n");
 			it.setExpectation(
-					"events" + NL +
-					"	doorClosed   D1CL" + NL +
-					"	drawerOpened D2OP" + NL +
-					"	lightOn      L1ON" + NL +
-					"	doorOpened   D1OP" + NL +
-					"	panelClosed  PNCL" + NL +
-					"end" + NL +
-					NL +
-					"commands" + NL +
-					"	unlockPanel PNUL" + NL +
-					"	lockPanel   NLK" + NL +
-					"	lockDoor    D1LK" + NL +
-					"	unlockDoor  D1UL" + NL +
-					"end" + NL);
+					"events\n" +
+					"	doorClosed   D1CL\n" +
+					"	drawerOpened D2OP\n" +
+					"	lightOn      L1ON\n" +
+					"	doorOpened   D1OP\n" +
+					"	panelClosed  PNCL\n" +
+					"end\n" +
+					"\n" +
+					"commands\n" +
+					"	unlockPanel PNUL\n" +
+					"	lockPanel   NLK\n" +
+					"	lockDoor    D1LK\n" +
+					"	unlockDoor  D1UL\n" +
+					"end\n");
 		});
 	}
 
 	@Test
 	public void events_state() {
-		formatterTestHelper.assertFormatted((FormatterTestRequest it) -> {
+		assertFormatted((FormatterTestRequest it) -> {
 			it.setToBeFormatted(
-					"events doorClosed D1CL drawerOpened D2OP lightOn L1ON doorOpened D1OP panelClosed PNCL end" + NL +
-					"state idle end" + NL);
+					"events doorClosed D1CL drawerOpened D2OP lightOn L1ON doorOpened D1OP panelClosed PNCL end\n" +
+					"state idle end\n");
 			it.setExpectation(
-					"events" + NL +
-					"	doorClosed   D1CL" + NL +
-					"	drawerOpened D2OP" + NL +
-					"	lightOn      L1ON" + NL +
-					"	doorOpened   D1OP" + NL +
-					"	panelClosed  PNCL" + NL +
-					"end" + NL +
-					NL +
-					"state idle" + NL +
-					"end" + NL);
+					"events\n" +
+					"	doorClosed   D1CL\n" +
+					"	drawerOpened D2OP\n" +
+					"	lightOn      L1ON\n" +
+					"	doorOpened   D1OP\n" +
+					"	panelClosed  PNCL\n" +
+					"end\n" +
+					"\n" +
+					"state idle\n" +
+					"end\n");
 		});
 	}
 
 	@Test
 	public void events_resetEvents_commands() {
-		formatterTestHelper.assertFormatted((FormatterTestRequest it) -> {
+		assertFormatted((FormatterTestRequest it) -> {
 			it.setToBeFormatted(
-					"events doorClosed D1CL drawerOpened D2OP lightOn L1ON doorOpened D1OP panelClosed PNCL end" + NL +
-					"resetEvents doorOpened end" + NL +
-					"commands unlockPanel PNUL lockPanel NLK lockDoor D1LK unlockDoor D1UL end" + NL);
+					"events doorClosed D1CL drawerOpened D2OP lightOn L1ON doorOpened D1OP panelClosed PNCL end\n" +
+					"resetEvents doorOpened end\n" +
+					"commands unlockPanel PNUL lockPanel NLK lockDoor D1LK unlockDoor D1UL end\n");
 			it.setExpectation(
-					"events" + NL +
-					"	doorClosed   D1CL" + NL +
-					"	drawerOpened D2OP" + NL +
-					"	lightOn      L1ON" + NL +
-					"	doorOpened   D1OP" + NL +
-					"	panelClosed  PNCL" + NL +
-					"end" + NL +
-					NL +
-					"resetEvents" + NL +
-					"	doorOpened" + NL +
-					"end" + NL +
-					NL +
-					"commands" + NL +
-					"	unlockPanel PNUL" + NL +
-					"	lockPanel   NLK" + NL +
-					"	lockDoor    D1LK" + NL +
-					"	unlockDoor  D1UL" + NL +
-					"end" + NL);
+					"events\n" +
+					"	doorClosed   D1CL\n" +
+					"	drawerOpened D2OP\n" +
+					"	lightOn      L1ON\n" +
+					"	doorOpened   D1OP\n" +
+					"	panelClosed  PNCL\n" +
+					"end\n" +
+					"\n" +
+					"resetEvents\n" +
+					"	doorOpened\n" +
+					"end\n" +
+					"\n" +
+					"commands\n" +
+					"	unlockPanel PNUL\n" +
+					"	lockPanel   NLK\n" +
+					"	lockDoor    D1LK\n" +
+					"	unlockDoor  D1UL\n" +
+					"end\n");
 		});
 	}
 
 	@Test
 	public void events_resetEvents_state() {
-		formatterTestHelper.assertFormatted((FormatterTestRequest it) -> {
+		assertFormatted((FormatterTestRequest it) -> {
 			it.setToBeFormatted(
-					"events doorClosed D1CL drawerOpened D2OP lightOn L1ON doorOpened D1OP panelClosed PNCL end" + NL +
-					"resetEvents doorOpened end state idle doorClosed => active end" + NL);
+					"events doorClosed D1CL drawerOpened D2OP lightOn L1ON doorOpened D1OP panelClosed PNCL end\n" +
+					"resetEvents doorOpened end state idle doorClosed => active end\n");
 			it.setExpectation(
-					"events" + NL +
-					"	doorClosed   D1CL" + NL +
-					"	drawerOpened D2OP" + NL +
-					"	lightOn      L1ON" + NL +
-					"	doorOpened   D1OP" + NL +
-					"	panelClosed  PNCL" + NL +
-					"end" + NL +
-					NL +
-					"resetEvents" + NL +
-					"	doorOpened" + NL +
-					"end" + NL +
-					NL +
-					"state idle" + NL +
-					"	doorClosed => active" + NL +
-					"end" + NL);
+					"events\n" +
+					"	doorClosed   D1CL\n" +
+					"	drawerOpened D2OP\n" +
+					"	lightOn      L1ON\n" +
+					"	doorOpened   D1OP\n" +
+					"	panelClosed  PNCL\n" +
+					"end\n" +
+					"\n" +
+					"resetEvents\n" +
+					"	doorOpened\n" +
+					"end\n" +
+					"\n" +
+					"state idle\n" +
+					"	doorClosed => active\n" +
+					"end\n");
 		});
 	}
 
 	@Test
 	public void events_resetEvents_commands_state() {
-		formatterTestHelper.assertFormatted((FormatterTestRequest it) -> {
+		assertFormatted((FormatterTestRequest it) -> {
 			it.setToBeFormatted(
-					"events doorClosed D1CL drawerOpened D2OP lightOn L1ON doorOpened D1OP panelClosed PNCL end" + NL +
-					"resetEvents doorOpened end" + NL +
-					"commands unlockPanel PNUL lockPanel NLK lockDoor D1LK unlockDoor D1UL end" + NL +
-					"state idle actions {unlockDoor lockPanel} doorClosed => active end" + NL);
+					"events doorClosed D1CL drawerOpened D2OP lightOn L1ON doorOpened D1OP panelClosed PNCL end\n" +
+					"resetEvents doorOpened end\n" +
+					"commands unlockPanel PNUL lockPanel NLK lockDoor D1LK unlockDoor D1UL end\n" +
+					"state idle actions {unlockDoor lockPanel} doorClosed => active end\n");
 			it.setExpectation(
-					"events" + NL +
-					"	doorClosed   D1CL" + NL +
-					"	drawerOpened D2OP" + NL +
-					"	lightOn      L1ON" + NL +
-					"	doorOpened   D1OP" + NL +
-					"	panelClosed  PNCL" + NL +
-					"end" + NL +
-					NL +
-					"resetEvents" + NL +
-					"	doorOpened" + NL +
-					"end" + NL +
-					NL +
-					"commands" + NL +
-					"	unlockPanel PNUL" + NL +
-					"	lockPanel   NLK" + NL +
-					"	lockDoor    D1LK" + NL +
-					"	unlockDoor  D1UL" + NL +
-					"end" + NL +
-					NL +
-					"state idle" + NL +
-					"	actions {unlockDoor lockPanel}" + NL +
-					"	doorClosed => active" + NL +
-					"end" + NL);
+					"events\n" +
+					"	doorClosed   D1CL\n" +
+					"	drawerOpened D2OP\n" +
+					"	lightOn      L1ON\n" +
+					"	doorOpened   D1OP\n" +
+					"	panelClosed  PNCL\n" +
+					"end\n" +
+					"\n" +
+					"resetEvents\n" +
+					"	doorOpened\n" +
+					"end\n" +
+					"\n" +
+					"commands\n" +
+					"	unlockPanel PNUL\n" +
+					"	lockPanel   NLK\n" +
+					"	lockDoor    D1LK\n" +
+					"	unlockDoor  D1UL\n" +
+					"end\n" +
+					"\n" +
+					"state idle\n" +
+					"	actions {unlockDoor lockPanel}\n" +
+					"	doorClosed => active\n" +
+					"end\n");
 		});
 	}
 
 	@Test
 	public void events_resetEvents_commands_states() {
-		formatterTestHelper.assertFormatted((FormatterTestRequest it) -> {
+		assertFormatted((FormatterTestRequest it) -> {
 			it.setToBeFormatted(
-					"events doorClosed D1CL drawerOpened D2OP lightOn L1ON doorOpened D1OP panelClosed PNCL end" + NL +
-					"resetEvents doorOpened end" + NL +
-					"commands unlockPanel PNUL lockPanel NLK lockDoor D1LK unlockDoor D1UL end" + NL +
-					"state idle actions {unlockDoor lockPanel} doorClosed => active end" + NL +
-					"state active drawerOpened => waitingForLight lightOn => waitingForDrawer end" + NL +
-					"state waitingForLight lightOn => unlockedPanel end" + NL +
-					"state waitingForDrawer drawerOpened => unlockedPanel end" + NL +
-					"state unlockedPanel actions {unlockPanel lockDoor} panelClosed => idle end" + NL);
+					"events doorClosed D1CL drawerOpened D2OP lightOn L1ON doorOpened D1OP panelClosed PNCL end\n" +
+					"resetEvents doorOpened end\n" +
+					"commands unlockPanel PNUL lockPanel NLK lockDoor D1LK unlockDoor D1UL end\n" +
+					"state idle actions {unlockDoor lockPanel} doorClosed => active end\n" +
+					"state active drawerOpened => waitingForLight lightOn => waitingForDrawer end\n" +
+					"state waitingForLight lightOn => unlockedPanel end\n" +
+					"state waitingForDrawer drawerOpened => unlockedPanel end\n" +
+					"state unlockedPanel actions {unlockPanel lockDoor} panelClosed => idle end\n");
 			it.setExpectation(
-					"events" + NL +
-					"	doorClosed   D1CL" + NL +
-					"	drawerOpened D2OP" + NL +
-					"	lightOn      L1ON" + NL +
-					"	doorOpened   D1OP" + NL +
-					"	panelClosed  PNCL" + NL +
-					"end" + NL +
-					NL +
-					"resetEvents" + NL +
-					"	doorOpened" + NL +
-					"end" + NL +
-					NL +
-					"commands" + NL +
-					"	unlockPanel PNUL" + NL +
-					"	lockPanel   NLK" + NL +
-					"	lockDoor    D1LK" + NL +
-					"	unlockDoor  D1UL" + NL +
-					"end" + NL +
-					NL +
-					"state idle" + NL +
-					"	actions {unlockDoor lockPanel}" + NL +
-					"	doorClosed => active" + NL +
-					"end" + NL +
-					NL +
-					"state active" + NL +
-					"	drawerOpened => waitingForLight" + NL +
-					"	lightOn      => waitingForDrawer" + NL +
-					"end" + NL +
-					NL +
-					"state waitingForLight" + NL +
-					"	lightOn => unlockedPanel" + NL +
-					"end" + NL +
-					NL +
-					"state waitingForDrawer" + NL +
-					"	drawerOpened => unlockedPanel" + NL +
-					"end" + NL +
-					NL +
-					"state unlockedPanel" + NL +
-					"	actions {unlockPanel lockDoor}" + NL +
-					"	panelClosed => idle" + NL +
-					"end" + NL);
+					"events\n" +
+					"	doorClosed   D1CL\n" +
+					"	drawerOpened D2OP\n" +
+					"	lightOn      L1ON\n" +
+					"	doorOpened   D1OP\n" +
+					"	panelClosed  PNCL\n" +
+					"end\n" +
+					"\n" +
+					"resetEvents\n" +
+					"	doorOpened\n" +
+					"end\n" +
+					"\n" +
+					"commands\n" +
+					"	unlockPanel PNUL\n" +
+					"	lockPanel   NLK\n" +
+					"	lockDoor    D1LK\n" +
+					"	unlockDoor  D1UL\n" +
+					"end\n" +
+					"\n" +
+					"state idle\n" +
+					"	actions {unlockDoor lockPanel}\n" +
+					"	doorClosed => active\n" +
+					"end\n" +
+					"\n" +
+					"state active\n" +
+					"	drawerOpened => waitingForLight\n" +
+					"	lightOn      => waitingForDrawer\n" +
+					"end\n" +
+					"\n" +
+					"state waitingForLight\n" +
+					"	lightOn => unlockedPanel\n" +
+					"end\n" +
+					"\n" +
+					"state waitingForDrawer\n" +
+					"	drawerOpened => unlockedPanel\n" +
+					"end\n" +
+					"\n" +
+					"state unlockedPanel\n" +
+					"	actions {unlockPanel lockDoor}\n" +
+					"	panelClosed => idle\n" +
+					"end\n");
 		});
 	}
 }
